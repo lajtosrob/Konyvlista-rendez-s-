@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Books</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+
+<body onload="apis()" ;>
+    <button onclick="displayBooks();">Könyvek lista megjelenítése</button>
+    <button onclick="booksObject.sorrend_ev(increaseYear); displayBooks(); ">Rendezés év szerint</button>
+    <button onclick="booksObject.sorrend_nev(increaseName); displayBooks(); ">Rendezés név szerint</button>
+    <table id="tabla" style="border:solid 2px black">
+        <thead>
+
+        </thead>
+    </table>
+
+
+
+    <script>
+        let increaseYear = true;
+        let increaseName = true;
+        let booksArray = [];
+        let booksObject = {
+            books: [],
+            sorrend_ev: function (x) {
+                let seged = [];
+                for (let i = 0; i < this.books.length; i++) {
+                    for (j = 0; j < this.books.length; j++) {
+                        if (this.books[i].year > this.books[j].year) {
+                            seged = this.books[j];
+                            this.books[j] = this.books[i];
+                            this.books[i] = seged;
+                        }
+                    }
+                    increaseYear = !increaseYear;
+                }
+            },
+            /* sorrend_ev: function () {
+                for (let i = 0; i < this.books.length; i++) {
+                    let minYear = this.books[i].year;
+                    let minIndex = 0;
+                    let minYearRow = [];
+                    for (j = i; j < this.books.length; j++) {
+                        if (this.books[j].year < minYear) {
+                            minYear = this.books[j].year;
+                            minIndex = j;
+                        }
+                        minYearRow = this.books[minIndex];
+                        this.books[minIndex] = this.books[i];
+                        this.books[i] = minYearRow;
+                    }
+                }
+            }, */
+            sorrend_nev: function (increaseName) {
+                let seged = [];
+                if (increaseName) {
+                    for (let i = 0; i < this.books.length; i++) {
+                        for (j = 0; j < this.books.length; j++) {
+                            if (this.books[j].name < this.books[i].name) {
+                                seged = this.books[i];
+                                this.books[i] = this.books[j];
+                                this.books[j] = seged;
+                            }
+                        }
+                    }
+                }
+                else {
+                    for (let i = 0; i < this.books.length; i++) {
+                        for (j = 0; j < this.books.length; j++) {
+                            if (this.books[j].name > this.books[i].name) {
+                                seged = this.books[i];
+                                this.books[i] = this.books[j];
+                                this.books[j] = seged;
+                            }
+                        }
+                    }
+                }
+                increaseName = !increaseName;
+            }
+            /* sorrend_nev: function () {
+                for (let i = 0; i < this.books.length; i++) {
+                    let minName = this.books[i].name;
+                    let minIndex = 0;
+                    let minNameRow = [];
+                    for (j = i; j < this.books.length; j++) {
+                        if (this.books[j].name > minName) {
+                            minName = this.books[j].name;
+                            minIndex = j;
+                        }
+                        minNameRow = this.books[minIndex];
+                        this.books[minIndex] = this.books[i];
+                        this.books[i] = minNameRow;
+                    }
+                }
+            } */
+        }
+
+        function displayBooks() {
+            document.getElementById("tabla").innerHTML = "<tr><th>Id</th><th>Könyvcím</th><th>Év</th></tr>";
+            for (let i = 0; i < booksObject.books.length; i++) {
+                document.getElementById("tabla").innerHTML +=
+                    "<tr><td style='width:50px'>" + (i + 1) + "</td><td style='border: solid black 1px;'>" + booksObject.books[i].name + "</td><td style='border: solid black 1px; width:50px'>" + booksObject.books[i].year + "</td></tr>";
+            }
+            console.log(booksObject.books);
+
+        }
+
+        function apis() {
+            fetch('https://randomlovecraft.com/api/books')
+                .then(data => data.json())
+                .then(adat => {
+                    for (i = 0; i < adat.data.length; i++) {
+                        booksObject.books.push(adat.data[i]);
+
+                    }
+                });
+        }
+    </script>
+</body>
+
+</html>
